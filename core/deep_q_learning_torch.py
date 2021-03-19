@@ -9,6 +9,8 @@ from torch.optim import Optimizer
 from torch.utils.tensorboard import SummaryWriter
 from core.q_learning import QN
 
+import pdb
+
 class DQN(QN):
 
     def __init__(self, env, config, logger=None):
@@ -229,7 +231,8 @@ class DQN(QN):
             group['lr'] = lr
         self.optimizer.step()
         self.timer.end('update_step/optimizer')
-        return loss.item(), total_norm.item()
+        # return loss.item(), total_norm.item()
+        return loss, total_norm
 
 
     def update_target_params(self):

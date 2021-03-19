@@ -9,6 +9,7 @@ from q2_schedule import LinearExploration, LinearSchedule
 
 from configs.q3_linear import config
 
+import pdb
 
 class Linear(DQN):
     """
@@ -31,9 +32,16 @@ class Linear(DQN):
         state_shape = list(self.env.observation_space.shape)
         img_height, img_width, n_channels = state_shape
         num_actions = self.env.action_space.n
+        print("img_height: ", img_height)
+        print("img_width: ", img_width)
+        print("n_channels: ", n_channels)
+        print("num_actions: ", num_actions)
+        print("state_history: ", self.config.state_history)
 
         ##############################################################
         ################ YOUR CODE HERE (2 lines) ##################
+        self.q_network = nn.Linear(img_height*img_width*n_channels*self.config.state_history, num_actions)
+        self.target_network = nn.Linear(img_height*img_width*n_channels*self.config.state_history, num_actions)
 
         ##############################################################
         ######################## END YOUR CODE #######################
@@ -60,7 +68,15 @@ class Linear(DQN):
 
         ##############################################################
         ################ YOUR CODE HERE - 3-5 lines ##################
-
+        # print("state shape: ", state.shape)
+        if network == 'q_network':
+            res = torch.flatten(state, start_dim=1, end_dim=-1)
+            #pdb.set_trace()
+            out = self.q_network(res)
+        else:
+            res = torch.flatten(state, start_dim=1, end_dim=-1)
+            #pdb.set_trace()
+            out = self.target_network(res) 
         ##############################################################
         ######################## END YOUR CODE #######################
 
@@ -84,7 +100,8 @@ class Linear(DQN):
 
         ##############################################################
         ################### YOUR CODE HERE - 1-2 lines ###############
-
+        torch.save(self.q_network.state_dict(), 'q_weights')
+        self.target_network.load_state_dict(torch.load('q_weights'), strict=False)
         ##############################################################
         ######################## END YOUR CODE #######################
 
@@ -123,7 +140,14 @@ class Linear(DQN):
 
         ##############################################################
         ##################### YOUR CODE HERE - 3-5 lines #############
+        q_s_a = torch.sum(q_values * F.one_hot(actions.to(torch.int64), num_classes=num_actions), dim=1) # use num_actions to caculate this
 
+        res1, idxs = torch.max(target_q_values, dim=1)
+        # pdb.set_trace()
+        q_samp = rewards + done_mask.float()*(gamma* res1) # compute max over
+        loss = F.mse_loss(q_s_a, q_samp)
+        #pdb.set_trace()
+        return loss
         ##############################################################
         ######################## END YOUR CODE #######################
 
@@ -139,7 +163,7 @@ class Linear(DQN):
         """
         ##############################################################
         #################### YOUR CODE HERE - 1 line #############
-
+        self.optimizer = torch.optim.Adam(self.q_network.parameters())
         ##############################################################
         ######################## END YOUR CODE #######################
 

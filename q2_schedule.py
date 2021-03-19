@@ -1,6 +1,6 @@
 import numpy as np
 from utils.test_env import EnvTest
-
+import pdb
 
 class LinearSchedule(object):
     def __init__(self, eps_begin, eps_end, nsteps):
@@ -14,6 +14,9 @@ class LinearSchedule(object):
         self.eps_begin      = eps_begin
         self.eps_end        = eps_end
         self.nsteps         = nsteps
+        print("eps begin: ", eps_begin)
+        print("eps end: ", eps_end)
+        print("eps nsteps: ", nsteps)
 
 
     def update(self, t):
@@ -27,14 +30,17 @@ class LinearSchedule(object):
         ##############################################################
         """
         TODO: modify self.epsilon such that
-			  it is a linear interpolation from self.eps_begin to
-			  self.eps_end as t goes from 0 to self.nsteps
-			  For t > self.nsteps self.epsilon remains constant
+              it is a linear interpolation from self.eps_begin to
+              self.eps_end as t goes from 0 to self.nsteps
+              For t > self.nsteps self.epsilon remains constant
         """
         ##############################################################
         ################ YOUR CODE HERE - 3-4 lines ##################
-		pass
-
+        if t > self.nsteps:
+            self.epsilon = self.eps_end
+            return
+        delta = (self.eps_end - self.eps_begin) / self.nsteps
+        self.epsilon = self.eps_begin + delta * t
         ##############################################################
         ######################## END YOUR CODE ############## ########
 
@@ -77,7 +83,10 @@ class LinearExploration(LinearSchedule):
         """
         ##############################################################
         ################ YOUR CODE HERE - 4-5 lines ##################
-		pass
+        if np.random.uniform() < self.epsilon:
+            return self.env.action_space.sample()
+        else:
+            return best_action
         ##############################################################
         ######################## END YOUR CODE #######################
 
@@ -109,6 +118,7 @@ def test3():
     env = EnvTest((5, 5, 1))
     exp_strat = LinearExploration(env, 1, 0.5, 10)
     exp_strat.update(20)
+    print("exp_strat.epsilon: ", exp_strat.epsilon)
     assert exp_strat.epsilon == 0.5, "Test 3 failed"
     print("Test3: ok")
 
