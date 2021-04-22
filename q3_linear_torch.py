@@ -102,6 +102,10 @@ class Linear(DQN):
         ################### YOUR CODE HERE - 1-2 lines ###############
         torch.save(self.q_network.state_dict(), 'q_weights')
         self.target_network.load_state_dict(torch.load('q_weights'), strict=False)
+
+        for p1, p2 in zip(self.q_network.parameters(), self.target_network.parameters()):
+            if p1.data.ne(p2.data).sum() > 0:
+                assert("MODELS NOT EQUAL")
         ##############################################################
         ######################## END YOUR CODE #######################
 
@@ -140,11 +144,15 @@ class Linear(DQN):
 
         ##############################################################
         ##################### YOUR CODE HERE - 3-5 lines #############
+
+        # I checked the following line by hand
         q_s_a = torch.sum(q_values * F.one_hot(actions.to(torch.int64), num_classes=num_actions), dim=1) # use num_actions to caculate this
 
         res1, idxs = torch.max(target_q_values, dim=1)
         # pdb.set_trace()
-        q_samp = rewards + done_mask.float()*(gamma* res1) # compute max over
+        q_samp = rewards + (1-done_mask.float())*(gamma* res1) # compute max over
+        #loss = ((q_s_a - q_samp)**2).mean()
+        #pdb.set_trace()
         loss = F.mse_loss(q_s_a, q_samp)
         #pdb.set_trace()
         return loss

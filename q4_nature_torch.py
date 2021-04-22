@@ -66,18 +66,18 @@ class NatureQN(Linear):
 
         # def conv_output_shape(h_w, kernel_size=1, stride=1, pad=0, dilation=1): -> h,w 
         pad1 = (3 * img_height - 4 + 8) // 2
-        modules['layer1'] = nn.Conv2d(n_channels * self.config.state_history, 32, 8, stride=4, padding=pad1)
+        modules['0'] = nn.Conv2d(n_channels * self.config.state_history, 32, 8, stride=4, padding=pad1)
         modules['relu1'] = nn.ReLU()
         out1h, out1w = conv_output_shape((img_height, img_width), kernel_size=8, stride=4, pad=pad1, dilation=1)
 
         pad2 = (out1w + 2) // 2
-        modules['layer2'] = nn.Conv2d(32, 64, 4, stride=2, padding=pad2)
-        modules['relu2'] = nn.ReLU()
+        modules['2'] = nn.Conv2d(32, 64, 4, stride=2, padding=pad2)
+        modules['relu3'] = nn.ReLU()
         out2h, out2w = conv_output_shape((out1h, out1w), kernel_size=4, stride=2, pad=pad2, dilation=1)
 
         pad3 = 1
-        modules['layer3'] = nn.Conv2d(64, 64, 3, stride=1, padding=pad3)
-        modules['relu3'] = nn.ReLU()
+        modules['4'] = nn.Conv2d(64, 64, 3, stride=1, padding=pad3)
+        modules['relu5'] = nn.ReLU()
         out3h, out3w = conv_output_shape((out2h, out2w), kernel_size=3, stride=1, pad=pad3, dilation=1)
 
         modules['flatten'] = nn.Flatten()
@@ -134,6 +134,7 @@ Use deep Q network for test environment.
 """
 if __name__ == '__main__':
     env = EnvTest((8, 8, 6))
+    #env = EnvTest()
 
     # exploration strategy
     exp_schedule = LinearExploration(env, config.eps_begin,
