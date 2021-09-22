@@ -3,7 +3,8 @@
 Adapted from CS234 Assignment 2
 
 # Current Implementation Details
-* 09-22-21: q4_nature_torch runs on toy example but achieves maximum reward of 1, this is buggy
+* 09-22-21: q4_nature_torch runs on toy example but achieves maximum reward of 1, this is potentially buggy (see results/q4_nature/scores.png)
+* Versus q3_linear which achieves maximum reward of 6 (corresponding to optimal play)
 
 ## Environment
 
