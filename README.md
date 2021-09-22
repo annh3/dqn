@@ -2,6 +2,9 @@
 
 Adapted from CS234 Assignment 2
 
+# Current Implementation Details
+* 09-22-21: q4_nature_torch runs on toy example but achieves maximum reward of 1, this is buggy
+
 ## Environment
 
 ### Pong-v0
