@@ -1,10 +1,6 @@
 # RL with Atari
 
-## Install
-Install either Anaconda or Miniconda using instructions below
-
-https://docs.conda.io/projects/continuumio-conda/en/latest/user-guide/install/index.html
-
+Adapted from CS234 Assignment 2
 
 ## Environment
 
@@ -86,5 +82,5 @@ which will recover the detached window.
 
 
 **Credits**
-Assignment code written by Guillaume Genthial and Shuhui Qu.
-Assignment code updated by Haojun Li and Garrett Thomas
+Assignment starter code written by Guillaume Genthial and Shuhui Qu.
+Assignment starter code updated by Haojun Li and Garrett Thomas
